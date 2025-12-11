@@ -105,7 +105,7 @@ with t1:
         
         # 1. GOLD ZONE
         if not gold_bets.empty:
-            st.subheader(f"⚡ RECOMMENDED (POSITIVE EV)")
+            st.subheader(f"⚡ RECOMMENDED {league_select} BETS (POSITIVE EV)")
             for i, bet in gold_bets.iterrows():
                 st.markdown(f"""
 <div class='gold-box'>
@@ -202,7 +202,7 @@ with t2:
     else:
         st.info("Scan Market first.")
 
-# === TAB 3: TEASER HUNTER (V6 AUTOMATION KEPT) ===
+# === TAB 3: TEASER HUNTER (AUTOMATED) ===
 with t3:
     st.subheader("🧩 AUTOMATED TEASER HUNTER")
     st.info("Scanning for Wong Criteria: Favorites (-7.5 to -8.5) and Underdogs (+1.5 to +2.5).")
@@ -211,9 +211,8 @@ with t3:
         if st.button("🕵️ HUNT TEASERS (Zero Fuel)"):
             candidates = []
             for i, row in market_df.iterrows():
-                # Uses Spread if available, falls back to implied
                 line = row.get('Spread', 0.0) 
-                if line == 0.0: continue # Skip if no spread data
+                if line == 0.0: continue
                 
                 side = "Favorite (-)" if line < 0 else "Underdog (+)"
                 status, is_valid, msg = brain.validate_teaser(line, 6.0, side)
