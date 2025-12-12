@@ -164,7 +164,7 @@ with t1:
                                 <span style='color:#AAA;'>{leg['Odds']}</span>
                             </div>"""
                         
-                        # FLUSH LEFT HTML
+                        # FLUSH LEFT HTML - FIXES THE VISUAL GLITCH
                         card_html = f"""
 <div class='parlay-card'>
     <div style='display:flex; justify-content:space-between; align-items:center;'>
@@ -249,7 +249,7 @@ with t2:
                 meter_color = "#00AAFF" if prob_pct > 65 else "#00FF00"
                 badge = "<span class='badge-anchor'>⚓ ANCHOR</span>" if prob_pct > 65 else "<span class='badge-fighter'>⚔️ FIGHTER</span>"
                 
-                # FLUSH LEFT HTML
+                # FLUSH LEFT HTML - FIXES THE VISUAL GLITCH
                 gold_html = f"""
 <div class='gold-box'>
     <div style='display:flex; justify-content:space-between;'><h3>{row['Team']}</h3>{badge}</div>
@@ -293,5 +293,7 @@ with t3:
                     st.markdown(teaser_html, unsafe_allow_html=True)
             else:
                 st.warning("No Wong Teasers found.")
+    elif league_select != "NFL":
+        st.warning("Teasers are an NFL Strategy.")
     else:
         st.info("Scan Market first.")
