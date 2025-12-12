@@ -5,96 +5,78 @@ from phoenix_brain import MarketBrain
 import market_feed 
 
 # --- CONFIG ---
-st.set_page_config(page_title="FOX 7.9: NEON GENESIS", layout="wide", page_icon="🦊")
+st.set_page_config(page_title="FOX 9.5: TITANIUM", layout="wide")
 brain = MarketBrain()
 
-# --- STYLING (NEON CYBERPUNK THEME) ---
+# --- STYLING (NEON CYBERPUNK) ---
 st.markdown("""
-    <style>
-    /* MAIN BG */
-    .stApp {
-        background-color: #0e0e12; 
-        color: #e0e0ff; 
-        font-family: 'Roboto', sans-serif;
-    }
+<style>
+    .stApp {background-color: #0e0e12; color: #e0e0ff; font-family: 'Roboto', sans-serif;}
+    h1, h2, h3 {color: #ffffff !important; text-shadow: 0 0 10px rgba(0, 229, 255, 0.3);}
     
-    /* HEADERS */
-    h1, h2, h3 { color: #ffffff !important; text-shadow: 0 0 10px rgba(0, 229, 255, 0.3); }
-
     /* BOXES */
     .gold-box {
-        border: 2px solid #39FF14; /* Neon Lime */
-        background-color: #111a11; 
+        border: 2px solid #39FF14; background-color: #111a11; 
         padding: 15px; border-radius: 10px; margin-bottom: 10px;
-        box-shadow: 0 0 15px rgba(57, 255, 20, 0.2); 
+        box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
     }
     .grey-box {
-        border: 1px solid #BD00FF; /* Neon Purple */
-        background-color: #1a1122; 
+        border: 1px solid #BD00FF; background-color: #1a1122; 
         padding: 15px; border-radius: 10px; margin-bottom: 10px; opacity: 0.9;
     }
     
     /* PARLAY CARD */
     .parlay-card {
-        background-color: #13131a; 
-        border: 1px solid #333;
-        border-radius: 12px;
-        padding: 20px;
-        margin-bottom: 15px;
-        transition: transform 0.2s, box-shadow 0.2s;
-        border-left: 5px solid #00E5FF; 
-    }
-    .parlay-card:hover { 
-        transform: translateY(-2px); 
-        border-color: #00E5FF; 
-        box-shadow: 0 0 25px rgba(0, 229, 255, 0.3); 
+        background-color: #13131a; border: 1px solid #333;
+        border-radius: 12px; padding: 20px; margin-bottom: 15px;
+        border-left: 5px solid #00E5FF;
+        box-shadow: 0 0 20px rgba(0,0,0,0.5);
     }
     
     /* BADGES */
-    .badge-anchor {
-        background-color: #00E5FF; color: #000000; 
-        padding: 3px 10px; border-radius: 4px; font-size: 0.8em; font-weight: bold; 
-        box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
-    }
-    .badge-fighter {
-        background-color: #BD00FF; color: #ffffff; 
-        padding: 3px 10px; border-radius: 4px; font-size: 0.8em; font-weight: bold;
-        box-shadow: 0 0 10px rgba(189, 0, 255, 0.5);
-    }
+    .badge-anchor {background-color: #00E5FF; color: #000; padding: 3px 10px; border-radius: 4px; font-weight: bold;}
+    .badge-fighter {background-color: #BD00FF; color: #fff; padding: 3px 10px; border-radius: 4px; font-weight: bold;}
+    .badge-teaser {background-color: #39FF14; color: #000; padding: 3px 10px; border-radius: 4px; font-weight: bold;}
     
     /* METERS */
-    .meter-container {background-color: #222; border-radius: 5px; height: 8px; width: 100%; margin-top: 5px; margin-bottom: 5px;}
-    .meter-fill {height: 100%; border-radius: 5px; transition: width 0.5s ease-in-out;}
+    .meter-container {background-color: #222; border-radius: 5px; height: 8px; width: 100%; margin-top: 5px;}
+    .meter-fill {height: 100%; border-radius: 5px;}
     
-    /* GRIDS */
-    .wager-grid {display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 10px; margin-bottom: 10px; background-color: #0a0a0f; padding: 10px; border-radius: 5px; border: 1px solid #333;}
-    .wager-item { text-align: center; }
-    .wager-label { color: #aaaadd; font-size: 0.8em; text-transform: uppercase; letter-spacing: 1px;}
-    .wager-value { color: #39FF14; font-weight: bold; font-size: 1.2em; text-shadow: 0 0 5px rgba(57, 255, 20, 0.5);} 
-    
-    .big-odds { font-size: 2.0em; font-weight: bold; color: #00E5FF; text-align: right; text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);}
+    /* ODDS & TEXT */
+    .big-odds {font-size: 2em; font-weight: bold; color: #00E5FF; text-align: right; text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);}
+    .wager-grid {display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 10px; background: #0a0a0f; padding: 10px; border-radius: 5px; border: 1px solid #333;}
+    .wager-label {color: #aaaadd; font-size: 0.8em;}
+    .wager-value {color: #39FF14; font-weight: bold; font-size: 1.2em;}
     
     /* BUTTONS */
-    div.stButton > button { 
+    div.stButton > button {
         width: 100%; padding: 12px; font-weight: bold; border-radius: 8px; border: none;
-        background: linear-gradient(90deg, #BD00FF 0%, #00E5FF 100%); 
-        color: white;
-        text-transform: uppercase; letter-spacing: 2px;
+        background: linear-gradient(90deg, #BD00FF 0%, #00E5FF 100%); color: white;
         transition: all 0.3s ease;
     }
-    div.stButton > button:hover {
-        box-shadow: 0 0 20px rgba(189, 0, 255, 0.7);
+    div.stButton > button:hover {box-shadow: 0 0 20px rgba(189, 0, 255, 0.7);}
+    
+    /* SIDEBAR LEGEND BUTTONS (VISUAL ONLY) */
+    .legend-btn {
+        display: block; width: 100%; text-align: center; padding: 8px; 
+        border-radius: 5px; font-weight: bold; margin-bottom: 5px; color: black;
     }
-    </style>
+</style>
 """, unsafe_allow_html=True)
 
-st.title("🦊 PHOENIX PROTOCOL: NEON GENESIS")
+st.title("PHOENIX PROTOCOL: NEON STABLE")
 
-# --- SIDEBAR ---
+# --- SIDEBAR (RESTORED LEGEND) ---
 with st.sidebar:
     st.header("GLOBAL CONFIG")
     league_select = st.radio("Select Market", ["NFL", "NBA"], horizontal=True)
     sport_key = 'americanfootball_nfl' if league_select == "NFL" else 'basketball_nba'
+    
+    st.markdown("---")
+    st.header("TACTICAL LEGEND")
+    st.markdown('<div class="legend-btn" style="background-color:#00E5FF;">ANCHOR (Safe >65%)</div>', unsafe_allow_html=True)
+    st.markdown('<div class="legend-btn" style="background-color:#BD00FF; color:white;">FIGHTER (High Value)</div>', unsafe_allow_html=True)
+    st.markdown('<div class="legend-btn" style="background-color:#39FF14;">PROFIT METER</div>', unsafe_allow_html=True)
     
     st.markdown("---")
     st.header("MONEY MANAGER")
@@ -109,108 +91,93 @@ with st.sidebar:
             else:
                 st.error("No active games found.")
 
-# --- LOAD DATA ---
-try:
-    market_df = pd.read_csv("live_market.csv")
-except:
-    market_df = pd.DataFrame()
+# --- LOAD DATA GLOBALLY ---
+try: market_df = pd.read_csv("live_market.csv")
+except: market_df = pd.DataFrame()
+
+# PRE-PROCESS DATA (FIXES CRASH)
+all_options = []
+options_df = pd.DataFrame()
+clean_options = []
+
+if not market_df.empty:
+    for i, row in market_df.iterrows():
+        sharp = row['Global Sharp']
+        true_prob = brain.calculate_vig_free_prob(sharp)
+        role = "NEUTRAL"
+        if true_prob > 0.60: role = "ANCHOR"
+        elif brain.kelly_criterion(true_prob, row['Hard Rock']) > 0: role = "FIGHTER"
+        
+        if true_prob > 0.45:
+            label = f"ANCHOR | {row['Team']}" if role == "ANCHOR" else f"FIGHTER | {row['Team']}"
+            all_options.append({"Label": label, "Team": row['Team'], "Odds": row['Hard Rock'], "Prob": true_prob, "Role": role})
+    
+    if all_options:
+        options_df = pd.DataFrame(all_options).drop_duplicates(subset=['Team'])
+        clean_options = options_df.to_dict('records')
 
 # --- TABS ---
 t1, t2, t3 = st.tabs(["PARLAY FORGE", "OPPORTUNITY BOARD", "TEASER HUNTER"])
 
-# === TAB 1: PARLAY FORGE (AUTO + MANUAL) ===
+# === TAB 1: AUTO FORGE ===
 with t1:
-    st.subheader("⚡ PARLAY FORGE")
+    st.subheader("PARLAY FORGE")
     
-    if not market_df.empty:
-        # 1. PREPARE ASSETS
-        all_options = []
-        for i, row in market_df.iterrows():
-            sharp = row['Global Sharp']
-            true_prob = brain.calculate_vig_free_prob(sharp)
+    if not options_df.empty:
+        if st.button("AUTO-FORGE TOP 15 SLIPS", type="primary"):
+            auto_assets = [x for x in clean_options if x['Role'] in ['ANCHOR', 'FIGHTER']]
+            if len(auto_assets) < 3: auto_assets = clean_options[:10]
+            top_assets = auto_assets[:12]
             
-            role = "NEUTRAL"
-            if true_prob > 0.60: role = "ANCHOR"
-            elif brain.kelly_criterion(true_prob, row['Hard Rock']) > 0: role = "FIGHTER"
+            combos = list(itertools.combinations(top_assets, 2)) + list(itertools.combinations(top_assets, 3))
+            scored_parlays = []
             
-            if true_prob > 0.45:
-                label = f"⚓ {row['Team']} ({row['Hard Rock']})" if role == "ANCHOR" else f"⚔️ {row['Team']} ({row['Hard Rock']})"
-                if role == "NEUTRAL": label = f"🛡️ {row['Team']} ({row['Hard Rock']})"
-                all_options.append({"Label": label, "Team": row['Team'], "Odds": row['Hard Rock'], "Prob": true_prob, "Role": role})
-        
-        options_df = pd.DataFrame(all_options).sort_values(by='Prob', ascending=False).drop_duplicates(subset=['Team'])
-        clean_options = options_df.to_dict('records')
+            for combo in combos:
+                dec_odds = 1.0; total_prob = 1.0; anchors = 0
+                for leg in combo:
+                    dec_odds *= brain.convert_american_to_decimal(leg['Odds'])
+                    total_prob *= leg['Prob']
+                    if leg['Role'] == 'ANCHOR': anchors += 1
+                score = (total_prob * 100) + (anchors * 10)
+                scored_parlays.append({"Combo": combo, "Odds": brain.convert_decimal_to_american(dec_odds), "Decimal": dec_odds, "Prob": total_prob, "Score": score, "Legs": len(combo)})
+            
+            top_15 = sorted(scored_parlays, key=lambda x: x['Score'], reverse=True)[:15]
+            
+            if top_15:
+                st.success(f"FORGED {len(top_15)} OPTIMAL TICKETS")
+                for idx, p in enumerate(top_15):
+                    wager = unit_size * 0.5; payout = wager * p['Decimal']; profit = payout - wager; prob_pct = p['Prob'] * 100
+                    meter_col = "#00E5FF" if prob_pct > 50 else "#BD00FF"
+                    
+                    legs_html = ""
+                    for leg in p['Combo']:
+                        badge = "badge-anchor" if leg['Role']=="ANCHOR" else "badge-fighter"
+                        icon = "ANCHOR" if leg['Role']=="ANCHOR" else "FIGHTER"
+                        legs_html += f"""<div style='display:flex; justify-content:space-between; margin-bottom:5px; border-bottom:1px solid #333;'>
+<span><span class='{badge}'>{icon}</span> <b>{leg['Team']}</b></span><span style='color:#aaa;'>{leg['Odds']}</span></div>"""
 
-        # AUTO GENERATOR
-        if st.button("🔨 AUTO-FORGE TOP 15 SLIPS", type="primary"):
-            with st.spinner("Simulating Parlay Combinations..."):
-                auto_assets = [x for x in clean_options if x['Role'] in ['ANCHOR', 'FIGHTER']]
-                if len(auto_assets) < 3: auto_assets = clean_options[:10]
-                top_assets = auto_assets[:12]
-                
-                combos = list(itertools.combinations(top_assets, 2)) + list(itertools.combinations(top_assets, 3))
-                scored_parlays = []
-                for combo in combos:
-                    dec_odds = 1.0
-                    total_prob = 1.0
-                    anchor_count = sum(1 for leg in combo if leg['Role'] == "ANCHOR")
-                    for leg in combo:
-                        dec_odds *= brain.convert_american_to_decimal(leg['Odds'])
-                        total_prob *= leg['Prob']
-                    score = (total_prob * 100) + (anchor_count * 10)
-                    scored_parlays.append({"Combo": combo, "Odds": brain.convert_decimal_to_american(dec_odds), "Decimal": dec_odds, "Prob": total_prob, "Score": score, "Legs": len(combo)})
-                
-                top_15 = sorted(scored_parlays, key=lambda x: x['Score'], reverse=True)[:15]
-                
-                if top_15:
-                    st.success(f"FORGED {len(top_15)} OPTIMAL TICKETS:")
-                    for idx, p in enumerate(top_15):
-                        wager = unit_size * 0.5 
-                        payout = wager * p['Decimal']
-                        profit = payout - wager
-                        prob_pct = p['Prob'] * 100
-                        meter_col = "#00E5FF" if prob_pct > 50 else "#BD00FF"
-                        
-                        legs_html = ""
-                        for leg in p['Combo']:
-                            badge_class = "badge-anchor" if leg['Role'] == "ANCHOR" else "badge-fighter"
-                            icon = "⚓" if leg['Role'] == "ANCHOR" else "⚔️"
-                            team_name = leg['Team']
-                            
-                            # FLUSH LEFT HTML FIX (NO INDENTATION)
-                            legs_html += f"""
-<div style='display:flex; justify-content:space-between; margin-bottom:4px; border-bottom:1px solid #333; padding-bottom:2px;'>
-<span><span class='{badge_class}'>{icon} {leg['Role']}</span> <b>{team_name}</b></span>
-<span style='color:#AAA;'>{leg['Odds']}</span>
-</div>"""
-                        
-                        # FLUSH LEFT HTML FIX
-                        card_html = f"""
+                    # CARD WITH FLUSHED HTML
+                    st.markdown(f"""
 <div class='parlay-card'>
-<div style='display:flex; justify-content:space-between; align-items:center;'>
-<span class='badge-combo'>#{idx+1} | {p['Legs']}-LEG SLIP</span>
-<span class='big-odds'>{p['Odds']}</span>
-</div>
-<hr style='border-color:#333; margin:10px 0;'>
+<div style='display:flex; justify-content:space-between;'><span style='color:#fff; font-weight:bold;'>#{idx+1} | {p['Legs']}-LEG SLIP</span><span class='big-odds'>{p['Odds']}</span></div>
+<hr style='border-color:#333;'>
 {legs_html}
-<hr style='border-color:#333; margin:10px 0;'>
 <div class='wager-grid'>
 <div class='wager-item'><div class='wager-label'>RISK</div><div class='wager-value'>${wager:.2f}</div></div>
 <div class='wager-item'><div class='wager-label'>PROFIT</div><div class='wager-value'>${profit:.2f}</div></div>
 <div class='wager-item'><div class='wager-label'>PAYOUT</div><div class='wager-value' style='color:#00E5FF'>${payout:.2f}</div></div>
 </div>
-<div style='margin-top:5px;'>
-<p style='text-align: center; margin-bottom:2px; font-size:0.8em;'>True Win Probability: {prob_pct:.1f}%</p>
+<div style='margin-top:8px;'>
+<div style='display:flex; justify-content:space-between; font-size:0.8em; color:#fff;'><span>True Win Probability</span><span>{prob_pct:.1f}%</span></div>
 <div class='meter-container'><div class='meter-fill' style='width:{prob_pct}%; background-color:{meter_col}; box-shadow: 0 0 10px {meter_col};'></div></div>
 </div>
-</div>"""
-                        st.markdown(card_html, unsafe_allow_html=True)
-                else:
-                    st.warning("No high-value combos found.")
+</div>""", unsafe_allow_html=True)
+            else:
+                st.warning("No combos found.")
 
-        # --- MANUAL BUILDER ---
+        # --- MANUAL BUILDER (NOW SAFE) ---
         st.markdown("---")
-        with st.expander("🛠️ MANUAL BUILDER (CUSTOM SLIP)"):
+        with st.expander("MANUAL BUILDER (CUSTOM SLIP)"):
             selected_labels = st.multiselect("Select Teams:", options_df['Label'].tolist())
             if selected_labels:
                 selected_data = []
@@ -219,129 +186,94 @@ with t1:
                     selected_data.append({"odds": row['Odds'], "prob": row['Prob']})
                 
                 final_amer, total_dec, combined_prob = brain.calculate_parlay_math(selected_data)
-                wager = unit_size * 0.5 
-                payout = wager * total_dec
-                profit = payout - wager
+                wager = unit_size * 0.5; profit = (wager * total_dec) - wager; payout = wager * total_dec; prob_pct = combined_prob * 100
                 meter_col = "#00E5FF" if combined_prob > 0.5 else "#BD00FF"
                 
-                # FLUSH LEFT HTML FIX
-                manual_html = f"""
+                st.markdown(f"""
 <div class='parlay-card' style='border-left: 5px solid #39FF14;'>
-<h2 style='text-align: center; color: #39FF14; text-shadow: 0 0 10px rgba(57, 255, 20, 0.5);'>CUSTOM SLIP</h2>
-<div class='big-odds' style='color:#39FF14; text-shadow: 0 0 10px rgba(57, 255, 20, 0.5);'>{final_amer if final_amer > 0 else final_amer}</div>
+<h2 style='text-align: center; color: #39FF14;'>CUSTOM SLIP</h2>
+<div class='big-odds' style='color:#39FF14;'>{final_amer}</div>
 <div class='wager-grid'>
 <div class='wager-item'><div class='wager-label'>RISK</div><div class='wager-value'>${wager:.2f}</div></div>
 <div class='wager-item'><div class='wager-label'>PROFIT</div><div class='wager-value'>${profit:.2f}</div></div>
 <div class='wager-item'><div class='wager-label'>PAYOUT</div><div class='wager-value' style='color:#39FF14'>${payout:.2f}</div></div>
 </div>
 <div style='margin-top:10px;'>
-<p style='text-align: center;'>True Win Probability: {combined_prob*100:.1f}%</p>
-<div class='meter-container'><div class='meter-fill' style='width: {combined_prob*100}%; background-color: {meter_col}; box-shadow: 0 0 10px {meter_col};'></div></div>
+<div style='display:flex; justify-content:space-between; font-size:0.8em; color:#fff;'><span>True Win Probability</span><span>{prob_pct:.1f}%</span></div>
+<div class='meter-container'><div class='meter-fill' style='width: {prob_pct}%; background-color: {meter_col}; box-shadow: 0 0 10px {meter_col};'></div></div>
 </div>
-</div>"""
-                st.markdown(manual_html, unsafe_allow_html=True)
+</div>""", unsafe_allow_html=True)
     else:
         st.info("Scan Market first.")
 
-# === TAB 2: OPPORTUNITY BOARD (WITH GUT CHECK) ===
+# === TAB 2: OPPORTUNITY BOARD ===
 with t2:
     if not market_df.empty:
-        st.subheader(f"⚡ RECOMMENDED (POSITIVE EV)")
-        
+        st.subheader("RECOMMENDED (POSITIVE EV)")
         all_bets = []
         for i, row in market_df.iterrows():
-            sharp = row['Global Sharp']
-            hero = row['Hard Rock']
-            true_prob = brain.calculate_vig_free_prob(sharp)
-            kelly_perc = brain.kelly_criterion(true_prob, hero)
-            
-            is_green = kelly_perc > 0
-            edge_val = kelly_perc if is_green else (true_prob - brain.get_implied_prob(hero)) * 100
-            
-            all_bets.append({
-                "Matchup": row['Matchup'], "Team": row['Team'], "Hard Rock": hero, "Sharp": sharp,
-                "Prob": true_prob, "Edge": edge_val, "Is_Green": is_green
-            })
-
-        bets_df = pd.DataFrame(all_bets).sort_values(by='Edge', ascending=False).drop_duplicates(subset=['Matchup'], keep='first')
-        gold_bets = bets_df[bets_df['Is_Green'] == True]
-        grey_bets = bets_df[bets_df['Is_Green'] == False]
+            sharp = row['Global Sharp']; hero = row['Hard Rock']
+            true_prob = brain.calculate_vig_free_prob(sharp); kelly = brain.kelly_criterion(true_prob, hero)
+            is_green = kelly > 0; edge = kelly if is_green else (true_prob - brain.get_implied_prob(hero)) * 100
+            all_bets.append({"Team": row['Team'], "Hard Rock": hero, "Prob": true_prob, "Edge": edge, "Is_Green": is_green})
         
-        # 1. GOLD SECTION
-        if not gold_bets.empty:
-            for i, row in gold_bets.iterrows():
-                bet_dollars = (row['Edge'] * 20 / 100) * unit_size
-                final_wager = min(bet_dollars, unit_size)
-                dec_odds = brain.convert_american_to_decimal(row['Hard Rock'])
-                total_payout = final_wager * dec_odds
-                net_profit = total_payout - final_wager
+        bets = pd.DataFrame(all_bets).sort_values(by='Edge', ascending=False).drop_duplicates(subset=['Team'])
+        
+        for i, row in bets.iterrows():
+            if row['Is_Green']:
+                wager = min((row['Edge']*20/100)*unit_size, unit_size); prof = (wager*brain.convert_american_to_decimal(row['Hard Rock']))-wager
+                prob_pct = row['Prob']*100; meter_col = "#00E5FF" if prob_pct > 65 else "#39FF14"
                 
-                prob_pct = row['Prob'] * 100
-                meter_color = "#00E5FF" if prob_pct > 65 else "#BD00FF"
-                badge = "<span class='badge-anchor'>⚓ ANCHOR</span>" if prob_pct > 65 else "<span class='badge-fighter'>⚔️ FIGHTER</span>"
-                
-                # FLUSH LEFT HTML FIX
-                gold_html = f"""
+                st.markdown(f"""
 <div class='gold-box'>
-<div style='display:flex; justify-content:space-between;'><h3>{row['Team']}</h3>{badge}</div>
-<div class='wager-grid' style='border:none; background-color:transparent;'>
-<div class='wager-item'><div class='wager-label'>WAGER</div><div class='wager-value'>${final_wager:.2f}</div></div>
-<div class='wager-item'><div class='wager-label'>PROFIT</div><div class='wager-value'>${net_profit:.2f}</div></div>
-<div class='wager-item'><div class='wager-label'>PAYOUT</div><div class='wager-value' style='color:#00E5FF'>${total_payout:.2f}</div></div>
+<div style='display:flex; justify-content:space-between;'><h3>{row['Team']}</h3><span style='color:#39FF14'>+{row['Edge']:.2f}% EDGE</span></div>
+<div class='wager-grid' style='background:none; border:none;'>
+<div class='wager-item'><div class='wager-label'>WAGER</div><div class='wager-value'>${wager:.2f}</div></div>
+<div class='wager-item'><div class='wager-label'>PROFIT</div><div class='wager-value'>${prof:.2f}</div></div>
+<div class='wager-item'><div class='wager-label'>ODDS</div><div class='wager-value' style='color:#00E5FF'>{row['Hard Rock']}</div></div>
 </div>
-<div class='meter-container'><div class='meter-fill' style='width:{prob_pct}%; background-color:{meter_color}; box-shadow: 0 0 10px {meter_color};'></div></div>
-<p style='font-size:0.8em; color:#aaaadd'>Odds: {row['Hard Rock']} | Edge: +{row['Edge']:.2f}%</p>
-</div>"""
-                st.markdown(gold_html, unsafe_allow_html=True)
+<div style='margin-top:8px;'>
+<div style='display:flex; justify-content:space-between; font-size:0.8em; color:#aaa;'><span>True Win Probability</span><span>{prob_pct:.1f}%</span></div>
+<div class='meter-container'><div class='meter-fill' style='width:{prob_pct}%; background-color:{meter_col};'></div></div></div>
+</div>""", unsafe_allow_html=True)
         
-        # 2. GREY SECTION (GUT CHECK)
-        st.subheader("📋 ALL MARKET ACTIONS (GUT CHECK)")
-        for i, row in grey_bets.iterrows():
-            prob_pct = row['Prob'] * 100
-            
-            # FLUSH LEFT HTML FIX
-            grey_html = f"""
+        st.subheader("ALL MARKET ACTIONS (GUT CHECK)")
+        for i, row in bets.iterrows():
+            if not row['Is_Green']:
+                prob_pct = row['Prob']*100
+                st.markdown(f"""
 <div class='grey-box'>
-<div style='display:flex; justify-content:space-between;'>
-<h4>{row['Team']}</h4>
-<span style='color:#BD00FF; font-weight:bold;'>House Edge: {abs(row['Edge']):.2f}%</span>
-</div>
-<div class='meter-container'><div class='meter-fill' style='width:{prob_pct}%; background-color:#555;'></div></div>
-<p style='font-size:0.8em; color:#AAA;'>Win Prob: {prob_pct:.1f}% | Odds: {row['Hard Rock']}</p>
-</div>"""
-            st.markdown(grey_html, unsafe_allow_html=True)
-    else:
-        st.info("Scan Market first.")
+<div style='display:flex; justify-content:space-between;'><h4>{row['Team']}</h4><span style='color:#BD00FF; font-weight:bold;'>House Edge: {abs(row['Edge']):.2f}%</span></div>
+<div style='margin-top:8px;'>
+<div style='display:flex; justify-content:space-between; font-size:0.8em; color:#aaa;'><span>True Win Probability</span><span>{prob_pct:.1f}%</span></div>
+<div class='meter-container'><div class='meter-fill' style='width:{prob_pct}%; background-color:#555;'></div></div></div>
+<p style='font-size:0.8em; color:#AAA; margin-top:5px;'>Odds: {row['Hard Rock']}</p>
+</div>""", unsafe_allow_html=True)
+    else: st.info("Scan Market first.")
 
 # === TAB 3: TEASER HUNTER ===
 with t3:
-    st.subheader("🧩 AUTOMATED TEASER HUNTER")
+    st.subheader("AUTOMATED TEASER HUNTER")
     if league_select == "NFL" and not market_df.empty:
-        if st.button("🕵️ HUNT TEASERS (Zero Fuel)"):
+        if st.button("HUNT TEASERS"):
             candidates = []
             for i, row in market_df.iterrows():
                 try: line = float(row.get('Spread', 0.0))
                 except: line = 0.0
                 if line == 0.0: continue
-                side = "Favorite (-)" if line < 0 else "Underdog (+)"
-                status, is_valid, msg = brain.validate_teaser(line, 6.0, side)
-                if is_valid:
-                    candidates.append({"Team": row['Team'], "Line": line, "Status": status, "Msg": msg})
+                side = "Fav" if line < 0 else "Dog"
+                status, valid, msg = brain.validate_teaser(line, 6.0, side)
+                if valid: candidates.append({"Team":row['Team'], "Line":line, "Msg":msg, "Status":status})
             
             if candidates:
                 st.success(f"FOUND {len(candidates)} TEASER CANDIDATES")
                 for c in candidates:
-                    # FLUSH LEFT HTML FIX
-                    teaser_html = f"""
+                    st.markdown(f"""
 <div class='gold-box' style='border-color:#00E5FF; box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);'>
-<h3 style='color:#00E5FF !important;'>{c['Team']} (Line: {c['Line']})</h3>
+<div style='display:flex; justify-content:space-between;'><h3 style='color:#00E5FF !important;'>{c['Team']} (Line: {c['Line']})</h3><span class='badge-teaser'>WONG</span></div>
 <p><b style='color:#39FF14;'>{c['Status']}</b></p>
 <p style='color:#aaaadd;'>{c['Msg']}</p>
-</div>"""
-                    st.markdown(teaser_html, unsafe_allow_html=True)
-            else:
-                st.warning("No Wong Teasers found.")
-    elif league_select != "NFL":
-        st.warning("Teasers are an NFL Strategy.")
-    else:
-        st.info("Scan Market first.")
+</div>""", unsafe_allow_html=True)
+            else: st.warning("No Teasers found.")
+    elif league_select != "NFL": st.warning("Teasers are an NFL Strategy.")
+    else: st.info("Scan Market first.")
